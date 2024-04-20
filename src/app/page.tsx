@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <main className='h-screen w-full grid place-content-center'>
       <Button asChild>
-        <Link href='/dashboard'>Dashboard</Link>
+        <Link href='/expanses'>Go To Expanses</Link>
       </Button>
     </main>
   );

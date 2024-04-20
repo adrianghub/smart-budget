@@ -7,8 +7,8 @@ TBA...
 ## Planning [Raw]
 
 #### 1. Uwierzytelnienie i Bezpieczeństwo
-- Passwordless logowanie
-- Weryfikacja e-mail
+- [x] Passwordless logowanie
+- [x] Weryfikacja e-mail
 - Wdrożenie MFA
 -  Integracja z Google OAuth
 - Interfejs Użytkownika (UI)

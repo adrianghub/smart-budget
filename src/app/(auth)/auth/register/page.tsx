@@ -1,5 +1,5 @@
 import {RegisterForm} from "@/app/(auth)/auth/register/_components/RegisterForm";
-import {createClient} from "@/utils/supabase/server";
+import {createClient} from "@/lib/supabase/server";
 import {redirect} from "next/navigation";
 
 export default async function RegisterPage() {

@@ -3,7 +3,7 @@
 import {redirect} from "next/navigation";
 import {z} from "zod";
 
-import {createClient} from "@/utils/supabase/server";
+import {createClient} from "@/lib/supabase/server";
 
 const schema = z.object({
   email: z.string({
