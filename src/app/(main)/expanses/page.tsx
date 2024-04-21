@@ -1,4 +1,4 @@
-import {ExpansesTable} from "@/app/(main)/expanses/_components/ExpansesTable";
+import {ExpansesTableView} from "@/app/(main)/expanses/_components/ExpansesTableView";
 import {displayCurrentMonth} from "@/lib/utils/displayCurrentMonth";
 import {Suspense} from "react";
 
@@ -12,7 +12,7 @@ export default async function ExpansesPage() {
       <div className='flex flex-1 rounded-lg border border-dashed shadow-sm'>
         <div className='container mx-auto py-10'>
           <Suspense fallback={<div>Loading...</div>}>
-            <ExpansesTable />
+            <ExpansesTableView />
           </Suspense>
         </div>
       </div>
