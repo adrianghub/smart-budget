@@ -10,12 +10,11 @@ TBA...
 - [x] Passwordless logowanie
 - [x] Weryfikacja e-mail
 - Wdrożenie MFA
--  Integracja z Google OAuth
-- Interfejs Użytkownika (UI)
-- Projektowanie głównego dashboardu
-- Tworzenie komponentów UI dla poszczególnych funkcji
-- Zapewnienie dostępności (a11y)
-- Responsywność dla urządzeń mobilnych
+- Integracja z Google OAuth
+- [x] Interfejs Użytkownika (UI)
+- [x] Projektowanie głównego dashboardu
+- [x] Zapewnienie dostępności (a11y)
+- [x] Responsywność dla urządzeń mobilnych
 
 #### 2. Zarządzanie Budżetem
 - Ustalanie i edycja budżetu
