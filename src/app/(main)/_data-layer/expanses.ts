@@ -1,6 +1,13 @@
 import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse-statuses-mock";
 
-export interface Expanse extends Omit<ExpanseDto, "status"> {
+export interface Expanse {
+  id: string;
+  title: string;
+  userId: string;
+  amount: number;
+  category: ExpanseCategory;
+  issueDate: string;
+  fvRefUrl?: string;
   status: ExpanseStatus;
 }
 
@@ -9,9 +16,9 @@ export interface ExpanseDto {
   title: string;
   userId: string;
   amount: Amount;
-  category: Category;
-  issueDate: string;
-  fvRefUrl?: string;
+  category: string;
+  issue_date: string;
+  fv_ref_url?: string;
   status: ExpanseStatusDto;
 }
 
@@ -21,5 +28,9 @@ export enum ExpanseStatusDto {
   PENDING = "PENDING",
 }
 
+export type ExpanseCategory = {
+  value: string;
+  label: string;
+};
+
 type Amount = number;
-type Category = string;

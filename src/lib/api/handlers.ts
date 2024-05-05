@@ -4,6 +4,7 @@ import {apiConfig} from "@/lib/api/config";
 
 export async function getExpansesData(): Promise<Expanse[]> {
   const {data} = await fetch(`${apiConfig.url}/api/expanses`, {
+    // cache: "no-store",
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -32,5 +33,11 @@ export async function getExpansesData(): Promise<Expanse[]> {
         value: status.value.toLowerCase(),
       }))
       .find((status) => status.value === exp.status.toLowerCase())!,
+    category: {
+      value: exp.category,
+      label: exp.category.split("")[0].toUpperCase() + exp.category.slice(1),
+    },
+    issueDate: new Date(exp.issue_date).toLocaleDateString("pl-PL"),
+    fvRefUrl: exp.fv_ref_url,
   }));
 }

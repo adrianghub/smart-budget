@@ -1,19 +1,17 @@
 "use server";
 
-import type {Expanse} from "@/app/(main)/_data-layer/expanses";
 import {createClient} from "@/lib/supabase/server";
 
-export async function addExpense({
-  title,
-  userId,
-  amount,
-  category,
-  issueDate,
-  fvRefUrl,
-  status,
-}: Expanse) {
+export async function addExpenseAction(prevState: any, formData: FormData) {
   const supabase = createClient();
   const userSession = await supabase.auth.getUser();
+
+  const title = formData.get("title") as string;
+  const amount = parseFloat(formData.get("amount") as string);
+  const category = formData.get("category") as string;
+  const issueDate = formData.get("issueDate") as string;
+  const fvRefUrl = formData.get("fvRefUrl") as string;
+  const status = formData.get("status") as string;
 
   if (!userSession || !userSession.data.user) {
     throw new Error("User not found");

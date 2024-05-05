@@ -10,7 +10,7 @@ export const expanses: ExpanseDto[] = [
     title: "Groceries",
     amount: 100,
     category: "random",
-    issueDate: "2021-09-15",
+    issue_date: "2021-09-15",
     status: ExpanseStatusDto.PAID,
   },
   {
@@ -19,9 +19,9 @@ export const expanses: ExpanseDto[] = [
     title: "Course on Udemy",
     amount: 20,
     category: "career",
-    fvRefUrl:
+    fv_ref_url:
       "https://sp-fv.s3.amazonaws.com/2021/09/15/1631710133-1631110133.png",
-    issueDate: "2022-09-15",
+    issue_date: "2022-09-15",
     status: ExpanseStatusDto.UNPAID,
   },
   {
@@ -30,9 +30,9 @@ export const expanses: ExpanseDto[] = [
     amount: 25,
     userId: "1",
     category: "subscription",
-    fvRefUrl:
+    fv_ref_url:
       "https://sp-fv.s3.amazonaws.com/2021/09/15/1631710133-1631210133.png",
-    issueDate: "2023-09-15",
+    issue_date: "2023-09-15",
     status: ExpanseStatusDto.PENDING,
   },
 ];

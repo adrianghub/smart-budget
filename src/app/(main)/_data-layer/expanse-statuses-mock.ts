@@ -11,12 +11,6 @@ export interface ExpanseStatus {
   icon?: LucideIcon;
 }
 
-export enum ExpanseStatusDto {
-  PAID = "PAID",
-  UNPAID = "UNPAID",
-  PENDING = "PENDING",
-}
-
 export const expanseStatuses: ExpanseStatus[] = [
   {
     value: "pending",

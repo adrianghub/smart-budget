@@ -1,7 +1,8 @@
-"use client";
-
 import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse-statuses-mock";
-import {type Expanse} from "@/app/(main)/_data-layer/expanses";
+import {
+  type Expanse,
+  type ExpanseCategory,
+} from "@/app/(main)/_data-layer/expanses";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {
@@ -63,6 +64,25 @@ export const columns: ColumnDef<Expanse>[] = [
     header: ({column}) => (
       <DataTableColumnHeader column={column} title='Category' />
     ),
+    cell: ({row}) => {
+      const category = row.getValue("category") as ExpanseCategory;
+
+      if (!category) {
+        return null;
+      }
+
+      return <span>{category.label}</span>;
+    },
+    sortingFn: (rowA, rowB) => {
+      const categoryA = rowA.getValue("category") as ExpanseCategory;
+      const categoryB = rowB.getValue("category") as ExpanseCategory;
+
+      if (!categoryA || !categoryB) {
+        return 0;
+      }
+
+      return categoryA.label.localeCompare(categoryB.label);
+    },
   },
   {
     accessorKey: "amount",
@@ -87,6 +107,10 @@ export const columns: ColumnDef<Expanse>[] = [
     header: "FV",
     cell: ({row}) => {
       const fv = row.getValue("fvRefUrl") as string;
+
+      if (!fv) {
+        return null;
+      }
 
       return (
         <a
