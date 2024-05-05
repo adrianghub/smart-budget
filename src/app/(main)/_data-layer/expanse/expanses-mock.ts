@@ -1,7 +1,7 @@
 import {
   ExpanseStatusDto,
   type ExpanseDto,
-} from "@/app/(main)/_data-layer/expanses";
+} from "@/app/(main)/_data-layer/expanse/expanses";
 
 export const expanses: ExpanseDto[] = [
   {

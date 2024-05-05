@@ -1,8 +1,8 @@
-import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse-statuses-mock";
+import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import {
   type Expanse,
   type ExpanseCategory,
-} from "@/app/(main)/_data-layer/expanses";
+} from "@/app/(main)/_data-layer/expanse/expanses";
 import {Button} from "@/components/ui/button";
 import {Checkbox} from "@/components/ui/checkbox";
 import {

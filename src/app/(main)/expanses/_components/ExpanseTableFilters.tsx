@@ -1,7 +1,7 @@
 "use client";
 
-import {expanseStatuses} from "@/app/(main)/_data-layer/expanse-statuses-mock";
-import type {Expanse} from "@/app/(main)/_data-layer/expanses";
+import {expanseStatuses} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
+import type {Expanse} from "@/app/(main)/_data-layer/expanse/expanses";
 import {Button} from "@/components/ui/button";
 import {Input} from "@/components/ui/input";
 import {DataTableFacetedFilter} from "@/components/ui/table/data-table-faceted-filter";

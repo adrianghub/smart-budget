@@ -1,6 +1,6 @@
 "use client";
 
-import type {Expanse} from "@/app/(main)/_data-layer/expanses";
+import type {Expanse} from "@/app/(main)/_data-layer/expanse/expanses";
 import {ExpanseTableFilters} from "@/app/(main)/expanses/_components/ExpanseTableFilters";
 import {columns} from "@/app/(main)/expanses/_constants/columns";
 import {DataTable} from "@/components/ui/table/data-table";

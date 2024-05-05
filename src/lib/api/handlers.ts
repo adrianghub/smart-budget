@@ -1,5 +1,8 @@
-import {expanseStatuses} from "@/app/(main)/_data-layer/expanse-statuses-mock";
-import type {Expanse, ExpanseDto} from "@/app/(main)/_data-layer/expanses";
+import {expanseStatuses} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
+import type {
+  Expanse,
+  ExpanseDto,
+} from "@/app/(main)/_data-layer/expanse/expanses";
 import {apiConfig} from "@/lib/api/config";
 
 export async function getExpansesData(): Promise<Expanse[]> {
