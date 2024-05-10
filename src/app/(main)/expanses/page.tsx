@@ -1,11 +1,11 @@
-import {ExpansesTableView} from "@/app/(main)/expanses/_components/ExpansesTableView";
-import {Button} from "@/components/ui/button";
-import {displayCurrentMonth} from "@/lib/utils/displayCurrentMonth";
-import {PlusIcon} from "lucide-react";
+import { ExpansesTableView } from "@/app/(main)/expanses/_components/ExpansesTableView";
+import { Button } from "@/components/ui/button";
+import { displayCurrentMonth } from "@/lib/utils/displayCurrentMonth";
+import { PlusIcon } from "lucide-react";
 import Link from "next/link";
-import {Suspense} from "react";
+import { Suspense } from "react";
 
-export default async function ExpansesPage() {
+export default function ExpansesPage() {
   return (
     <>
       <div className='flex flex-col md:flex-row md:items-center md:justify-between gap-4'>

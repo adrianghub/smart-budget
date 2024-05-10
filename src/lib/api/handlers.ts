@@ -1,12 +1,12 @@
-import {expanseStatuses} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
+import { expanseStatuses } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import type {
   Expanse,
   ExpanseDto,
 } from "@/app/(main)/_data-layer/expanse/expanses";
-import {apiConfig} from "@/lib/api/config";
+import { apiConfig } from "@/lib/api/config";
 
 export async function getExpansesData(): Promise<Expanse[]> {
-  const {data} = await fetch(`${apiConfig.url}/api/expanses`, {
+  const { data } = await fetch(`${apiConfig.url}/api/expanses`, {
     // cache: "no-store",
     method: "GET",
     headers: {

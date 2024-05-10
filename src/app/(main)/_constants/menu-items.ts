@@ -1,4 +1,4 @@
-import {DollarSign, type LucideIcon} from "lucide-react";
+import { DollarSign, type LucideIcon } from "lucide-react";
 
 interface MenuItem {
   id: string;

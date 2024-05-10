@@ -1,8 +1,8 @@
 "use server";
 
-import {createClient} from "@/lib/supabase/server";
-import {redirect} from "next/navigation";
-import {z} from "zod";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
 const schema = z.object({
   email: z.string({
@@ -25,11 +25,11 @@ export async function verifyOtpAction(_prevState: any, formData: FormData) {
     };
   }
 
-  const {email, token} = validatedFields.data;
+  const { email, token } = validatedFields.data;
 
   const supabase = createClient();
 
-  const {error} = await supabase.auth.verifyOtp({
+  const { error } = await supabase.auth.verifyOtp({
     email,
     token,
     type: "email",
@@ -42,5 +42,5 @@ export async function verifyOtpAction(_prevState: any, formData: FormData) {
     };
   }
 
-  redirect("/dashboard");
+  redirect("/expanses");
 }
