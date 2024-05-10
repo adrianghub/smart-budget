@@ -1,9 +1,9 @@
 "use client";
 
-import {addExpenseAction} from "@/app/(main)/expanses/_actions/addExpanseAction";
-import {expanseSchema} from "@/app/(main)/expanses/_schemas/expanseSchema";
-import {Button} from "@/components/ui/button";
-import {DatePickerField} from "@/components/ui/datepicker";
+import { addExpenseAction } from "@/app/(main)/expanses/_actions/addExpanseAction";
+import { expanseSchema } from "@/app/(main)/expanses/_schemas/expanseSchema";
+import { Button } from "@/components/ui/button";
+import { DatePickerField } from "@/components/ui/datepicker";
 import {
   Form,
   FormControl,
@@ -13,7 +13,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {Input} from "@/components/ui/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -21,13 +21,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {zodResolver} from "@hookform/resolvers/zod";
-
-import {useRef} from "react";
-
-import {useFormState} from "react-dom";
-import {useForm} from "react-hook-form";
-import type {z} from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRef } from "react";
+import { useFormState } from "react-dom";
+import { useForm } from "react-hook-form";
+import type { z } from "zod";
 
 export const ExpanseForm = () => {
   const [state, formAction] = useFormState(addExpenseAction, {
@@ -35,7 +33,6 @@ export const ExpanseForm = () => {
     message: "",
     data: null,
   });
-
   const form = useForm<z.infer<typeof expanseSchema>>({
     resolver: zodResolver(expanseSchema),
     defaultValues: {
@@ -44,9 +41,9 @@ export const ExpanseForm = () => {
       category: "",
       issueDate: "",
       status: "",
+      file: "",
     },
   });
-
   const formRef = useRef<HTMLFormElement>(null);
 
   return (
@@ -68,13 +65,18 @@ export const ExpanseForm = () => {
             <form
               ref={formRef}
               action={formAction}
-              onSubmit={form.handleSubmit(() => formRef.current?.submit())}
+              onSubmit={(e) =>
+                form.handleSubmit(() => {
+                  e.preventDefault();
+                  formRef.current?.submit();
+                })
+              }
               className='grid gap-4'
             >
               <FormField
                 control={form.control}
                 name='title'
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
@@ -87,7 +89,7 @@ export const ExpanseForm = () => {
               <FormField
                 control={form.control}
                 name='amount'
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Amount</FormLabel>
                     <FormControl>
@@ -109,7 +111,7 @@ export const ExpanseForm = () => {
               <FormField
                 control={form.control}
                 name='category'
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <Select
@@ -136,7 +138,7 @@ export const ExpanseForm = () => {
               <FormField
                 control={form.control}
                 name='status'
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
                     <Select
@@ -162,11 +164,27 @@ export const ExpanseForm = () => {
               <FormField
                 control={form.control}
                 name='issueDate'
-                render={({field}) => (
+                render={({ field }) => (
                   <FormItem className='flex flex-col'>
                     <FormLabel>Issue Date</FormLabel>
                     <DatePickerField field={field} />
                     <FormDescription>Date of the expense.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name='file'
+                render={({ field }) => (
+                  <FormItem className='flex flex-col'>
+                    <FormLabel>FV</FormLabel>
+                    <FormControl>
+                      <Input type='file' placeholder='Select file' {...field} />
+                    </FormControl>
+                    <FormDescription>
+                      Upload FV for your expanse.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -189,7 +207,6 @@ export const ExpanseForm = () => {
                 value={form.getValues().issueDate}
                 readOnly
               />
-              {/* TODO: Upload FV */}
               <Button className='w-full mt-4'>Submit Expanse</Button>
             </form>
           </Form>

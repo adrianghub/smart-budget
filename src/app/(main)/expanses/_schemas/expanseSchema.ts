@@ -1,4 +1,4 @@
-import {z} from "zod";
+import { z } from "zod";
 
 export const expanseSchema = z.object({
   title: z
@@ -25,5 +25,6 @@ export const expanseSchema = z.object({
       message: "Status is required",
     })
     .trim(),
+  file: z.any().optional(),
   fvRefUrl: z.string().url().optional(),
 });
