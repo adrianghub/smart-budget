@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "ts-node --transpile-only ./src/scripts/seed-db.ts"
+    "db:seed": "ts-node --transpile-only ./src/scripts/seed-db.ts",
+    "docker:db:up": "docker-compose -f compose.db.yml up -d",
+    "docker:db:down": "docker-compose -f compose.db.yml down"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.572.0",
