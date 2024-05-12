@@ -31,7 +31,7 @@ export async function getBucketSignedUrl(
 
   const putObjectCommand = new PutObjectCommand({
     Bucket: process.env.AWS_BUCKET_NAME!,
-    Key: `FV-${Date.now()}-${generateFileName}.pdf`,
+    Key: `FV-${Date.now()}-${generateFileName()}.pdf`,
     ContentType: type,
     ContentLength: fileSize,
     ChecksumSHA256: checksum,

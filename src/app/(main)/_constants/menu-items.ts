@@ -15,9 +15,15 @@ export const menuItems: MenuItem[] = [
   // icon: Home,
   // },
   {
-    id: "expanses",
-    name: "Expanses",
-    href: "/expanses",
+    id: "transactions",
+    name: "Transactions",
+    href: "/transactions",
+    icon: DollarSign,
+  },
+  {
+    id: "wallets",
+    name: "Wallets",
+    href: "/wallets",
     icon: DollarSign,
   },
   // {

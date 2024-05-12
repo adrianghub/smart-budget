@@ -1,12 +1,12 @@
-import {AccountSettingsMenu} from "@/app/(main)/_components/AccountSettingsMenu";
+import { AccountSettingsMenu } from "@/app/(main)/_components/AccountSettingsMenu";
 import GlobalSearch from "@/app/(main)/_components/GlobalSearch";
 import MobileMenu from "@/app/(main)/_components/MobileMenu";
-import {menuItems} from "@/app/(main)/_constants/menu-items";
-import {Button} from "@/components/ui/button";
-import {createClient} from "@/lib/supabase/server";
-import {Bell, Package2} from "lucide-react";
+import { menuItems } from "@/app/(main)/_constants/menu-items";
+import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/server";
+import { Bell, Package2 } from "lucide-react";
 import Link from "next/link";
-import {redirect} from "next/navigation";
+import { redirect } from "next/navigation";
 
 export default async function MainLayout({
   children,
@@ -15,7 +15,7 @@ export default async function MainLayout({
 }) {
   const supabase = createClient();
 
-  const {data, error} = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getUser();
   if (error || !data?.user) {
     redirect("/auth/login");
   }
@@ -36,7 +36,7 @@ export default async function MainLayout({
           </div>
           <div className='flex-1'>
             <nav className='grid items-start px-2 text-sm font-medium lg:px-4'>
-              {menuItems.map(({id, href, name, icon: Icon}) => (
+              {menuItems.map(({ id, href, name, icon: Icon }) => (
                 <Link
                   key={id}
                   href={href}

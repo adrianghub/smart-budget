@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+// TODO: use transactionInsertSchema
 export const expanseSchema = z.object({
   title: z
     .string()
@@ -26,5 +27,5 @@ export const expanseSchema = z.object({
     })
     .trim(),
   file: z.any().optional(),
-  fvRefUrl: z.string().url().optional(),
+  fvRefUrl: z.string().url().nullable().optional(),
 });

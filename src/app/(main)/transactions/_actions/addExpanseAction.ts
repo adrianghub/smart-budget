@@ -1,12 +1,11 @@
 "use server";
 
-import { getBucketSignedUrl } from "@/app/(main)/expanses/_actions/getBucketSignedUrl";
-import { expanseSchema } from "@/app/(main)/expanses/_schemas/expanseSchema";
+import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
+import { getBucketSignedUrl } from "@/app/(main)/transactions/_actions/getBucketSignedUrl";
+import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
 import { createClient } from "@/lib/supabase/server";
 import crypto from "crypto";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import type { z } from "zod";
 
 async function computeSHA256(file: File) {
   const buffer = await file.arrayBuffer();
@@ -20,8 +19,7 @@ async function computeSHA256(file: File) {
 
 export async function addExpenseAction(
   prevState: {
-    message: string;
-    data: z.infer<typeof expanseSchema> | null;
+    success?: boolean;
     issues?: string[];
   },
   formData: FormData
@@ -31,8 +29,6 @@ export async function addExpenseAction(
 
   if (!userSession || !userSession.data.user) {
     return {
-      data: null,
-      message: "",
       issues: ["User not found"],
     };
   }
@@ -42,16 +38,31 @@ export async function addExpenseAction(
 
   if (!parsed.success) {
     return {
-      data: null,
-      message: "",
       issues: parsed.error.issues.map((issue) => issue.message),
     };
   }
 
   const { title, amount, category, issueDate, status, file } = parsed.data;
-  let fvRefUrl = null;
 
-  if (file) {
+  const { data: expanse, error } = await supabase
+    .from("expenses")
+    .insert([
+      {
+        title,
+        user_id: userSession.data.user.id,
+        amount,
+        category,
+        issue_date: new Date(issueDate).toISOString().split("T")[0],
+        fv_ref_url: null,
+        status: status.toUpperCase(),
+      },
+    ])
+    .select()
+    .returns<Expanse[]>();
+
+  if (error) throw new Error(error.message);
+
+  if (file && file.size > 0) {
     try {
       const checksum = await computeSHA256(file);
       const signedUrlResult = await getBucketSignedUrl(
@@ -73,26 +84,25 @@ export async function addExpenseAction(
         },
       });
 
-      fvRefUrl = data.url.split("?")[0];
+      const fvRefUrl = data.url.split("?")[0];
+
+      const { error } = await supabase
+        .from("expenses")
+        .update({
+          fv_ref_url: fvRefUrl,
+        })
+        .eq("id", expanse[0].id);
+
+      if (error) throw new Error(error.message);
     } catch (error) {
       console.error(error);
     }
   }
 
-  const { data: _expanse, error } = await supabase.from("expenses").insert([
-    {
-      title,
-      user_id: userSession.data.user.id,
-      amount,
-      category,
-      issue_date: new Date(issueDate).toISOString().split("T")[0],
-      fv_ref_url: fvRefUrl,
-      status: status.toUpperCase(),
-    },
-  ]);
+  revalidatePath("/transactions");
 
-  if (error) throw new Error(error.message);
-
-  revalidatePath("/expanses");
-  redirect("/expanses");
+  return {
+    success: true,
+    issues: [],
+  };
 }

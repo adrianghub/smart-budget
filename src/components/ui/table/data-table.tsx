@@ -23,19 +23,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {DataTablePagination} from "@/components/ui/table/data-table-pagination";
+import { DataTablePagination } from "@/components/ui/table/data-table-pagination";
 import React from "react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   renderFilters?: (table: Table<TData>) => React.ReactNode;
+  renderActions?: (table: Table<TData>, disabled?: boolean) => React.ReactNode;
+  disabled?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   renderFilters,
+  renderActions,
+  disabled,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -65,13 +69,23 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      {renderFilters && (
-        <div className='flex items-center justify-between'>
-          <div className='flex flex-1 items-center space-x-2'>
-            {renderFilters(table)}
+      <div className='flex items-center justify-between py-4'>
+        {renderFilters && (
+          <div className='flex items-center justify-between'>
+            <div className='flex flex-1 items-center space-x-2'>
+              {renderFilters(table)}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+        {renderActions &&
+          table.getFilteredSelectedRowModel().rows.length > 0 && (
+            <div className='flex items-center justify-between'>
+              <div className='flex flex-1 items-center space-x-2'>
+                {renderActions(table, disabled)}
+              </div>
+            </div>
+          )}
+      </div>
 
       <div className='rounded-md border'>
         <TableComponent>

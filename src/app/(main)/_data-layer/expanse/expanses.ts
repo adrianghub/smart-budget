@@ -1,4 +1,4 @@
-import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
+import type { ExpanseStatus } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 
 export interface Expanse {
   id: string;

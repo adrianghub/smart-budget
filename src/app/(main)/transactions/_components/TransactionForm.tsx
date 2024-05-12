@@ -1,8 +1,8 @@
 "use client";
 
-import { addExpenseAction } from "@/app/(main)/expanses/_actions/addExpanseAction";
-import { expanseSchema } from "@/app/(main)/expanses/_schemas/expanseSchema";
-import { Button } from "@/components/ui/button";
+import { addExpenseAction } from "@/app/(main)/transactions/_actions/addExpanseAction";
+import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
+import { SubmitButton } from "@/components/SubmitButton";
 import { DatePickerField } from "@/components/ui/datepicker";
 import {
   Form,
@@ -21,18 +21,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { toast } from "@/components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { redirect } from "next/navigation";
 import { useRef } from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-export const ExpanseForm = () => {
+export const TransactionForm = () => {
   const [state, formAction] = useFormState(addExpenseAction, {
     issues: [],
-    message: "",
-    data: null,
   });
+
   const form = useForm<z.infer<typeof expanseSchema>>({
     resolver: zodResolver(expanseSchema),
     defaultValues: {
@@ -46,18 +47,32 @@ export const ExpanseForm = () => {
   });
   const formRef = useRef<HTMLFormElement>(null);
 
+  if (state?.success) {
+    setTimeout(() => {
+      toast({
+        title: "Transaction added successfully",
+        description: `${form.getValues("title")} has been added`,
+      });
+    });
+
+    redirect("/transactions");
+  }
+
+  if (state?.issues?.length > 0) {
+    toast({
+      title: "Failed to add transaction",
+      description: state?.issues?.join(", "),
+    });
+    state.issues = [];
+  }
+
   return (
     <div className='flex items-center justify-center py-12'>
       <div className='mx-auto grid w-[350px] gap-6'>
-        <div>
-          {state?.issues?.map((issue) => (
-            <p key={issue}>{issue}</p>
-          ))}
-        </div>
         <div className='grid gap-2 text-center'>
-          <h1 className='text-3xl font-bold'>Add Expanse</h1>
+          <h1 className='text-3xl font-bold'>Add Transaction</h1>
           <p className='text-balance text-muted-foreground'>
-            Add a new expanse to your budget
+            Add a new transaction to your budget
           </p>
         </div>
         <div className='grid gap-4'>
@@ -65,12 +80,11 @@ export const ExpanseForm = () => {
             <form
               ref={formRef}
               action={formAction}
-              onSubmit={(e) =>
-                form.handleSubmit(() => {
-                  e.preventDefault();
-                  formRef.current?.submit();
-                })
-              }
+              onSubmit={form.handleSubmit(() => {
+                if (formRef?.current) {
+                  formAction(new FormData(formRef?.current));
+                }
+              })}
               className='grid gap-4'
             >
               <FormField
@@ -155,7 +169,7 @@ export const ExpanseForm = () => {
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Select a status for your expanse.
+                      Select a status of your transaction.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -168,7 +182,7 @@ export const ExpanseForm = () => {
                   <FormItem className='flex flex-col'>
                     <FormLabel>Issue Date</FormLabel>
                     <DatePickerField field={field} />
-                    <FormDescription>Date of the expense.</FormDescription>
+                    <FormDescription>Date of the transaction.</FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -183,7 +197,7 @@ export const ExpanseForm = () => {
                       <Input type='file' placeholder='Select file' {...field} />
                     </FormControl>
                     <FormDescription>
-                      Upload FV for your expanse.
+                      Upload FV for the transaction.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -207,7 +221,7 @@ export const ExpanseForm = () => {
                 value={form.getValues().issueDate}
                 readOnly
               />
-              <Button className='w-full mt-4'>Submit Expanse</Button>
+              <SubmitButton text='Submit Transaction' />
             </form>
           </Form>
         </div>
