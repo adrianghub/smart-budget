@@ -7,12 +7,11 @@ import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
 export async function deleteBulkTransactions(
-  data: Expanse[],
   prevState: {
     success?: boolean;
     issues?: string[];
   },
-  _formData: FormData
+  data: Expanse[]
 ) {
   const supabase = createClient();
   const userSession = await supabase.auth.getUser();

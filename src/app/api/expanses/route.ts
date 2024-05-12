@@ -14,8 +14,7 @@ export async function GET(request: NextRequest) {
   //   : {};
 
   const supabase = createClient();
-
-  let query = supabase.from("expenses").select("*", { count: "exact" });
+  const query = supabase.from("expenses").select("*", { count: "exact" });
   // .range((page - 1) * pageSize, page * pageSize - 1);
 
   // if (sortField) {

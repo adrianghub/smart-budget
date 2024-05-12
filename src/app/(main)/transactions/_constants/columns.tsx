@@ -1,10 +1,10 @@
-import type {ExpanseStatus} from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
+import type { ExpanseStatus } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import {
   type Expanse,
   type ExpanseCategory,
 } from "@/app/(main)/_data-layer/expanse/expanses";
-import {Button} from "@/components/ui/button";
-import {Checkbox} from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,8 +12,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {DataTableColumnHeader} from "@/components/ui/table/data-table-column-header";
-import {ColumnDef} from "@tanstack/react-table";
+import { DataTableColumnHeader } from "@/components/ui/table/data-table-column-header";
+import { ColumnDef } from "@tanstack/react-table";
 import {
   Check,
   Clock12Icon,
@@ -21,6 +21,7 @@ import {
   XSquareIcon,
   type LucideIcon,
 } from "lucide-react";
+import Link from "next/link";
 
 export const statusIcons: Record<ExpanseStatus["value"], LucideIcon> = {
   paid: Check,
@@ -31,7 +32,7 @@ export const statusIcons: Record<ExpanseStatus["value"], LucideIcon> = {
 export const columns: ColumnDef<Expanse>[] = [
   {
     id: "select",
-    header: ({table}) => (
+    header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
@@ -43,7 +44,7 @@ export const columns: ColumnDef<Expanse>[] = [
         aria-label='Select all'
       />
     ),
-    cell: ({row}) => (
+    cell: ({ row }) => (
       <Checkbox
         checked={row.getIsSelected()}
         onCheckedChange={(value: unknown) => row.toggleSelected(!!value)}
@@ -55,16 +56,16 @@ export const columns: ColumnDef<Expanse>[] = [
   },
   {
     accessorKey: "title",
-    header: ({column}) => (
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Title' />
     ),
   },
   {
     accessorKey: "category",
-    header: ({column}) => (
+    header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Category' />
     ),
-    cell: ({row}) => {
+    cell: ({ row }) => {
       const category = row.getValue("category") as ExpanseCategory;
 
       if (!category) {
@@ -87,7 +88,7 @@ export const columns: ColumnDef<Expanse>[] = [
   {
     accessorKey: "amount",
     header: "Amount",
-    cell: ({row}) => {
+    cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
       const formatted = new Intl.NumberFormat("pl-PL", {
         style: "currency",
@@ -105,7 +106,7 @@ export const columns: ColumnDef<Expanse>[] = [
   {
     accessorKey: "fvRefUrl",
     header: "FV",
-    cell: ({row}) => {
+    cell: ({ row }) => {
       const fv = row.getValue("fvRefUrl") as string;
 
       if (!fv) {
@@ -127,7 +128,7 @@ export const columns: ColumnDef<Expanse>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({row}) => {
+    cell: ({ row }) => {
       const status = row.getValue("status") as ExpanseStatus;
 
       if (!status) {
@@ -149,7 +150,7 @@ export const columns: ColumnDef<Expanse>[] = [
   },
   {
     id: "actions",
-    cell: () => (
+    cell: ({ row }) => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant='ghost' className='h-8 w-8 p-0'>
@@ -159,7 +160,11 @@ export const columns: ColumnDef<Expanse>[] = [
         </DropdownMenuTrigger>
         <DropdownMenuContent align='end'>
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem>View expanse details</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href={`/transactions/${row.original.id}/edit`}>
+              Edit transaction
+            </Link>
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),

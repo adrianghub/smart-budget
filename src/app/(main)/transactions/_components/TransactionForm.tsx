@@ -1,6 +1,8 @@
 "use client";
 
+import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { addExpenseAction } from "@/app/(main)/transactions/_actions/addExpanseAction";
+import { updateExpenseAction } from "@/app/(main)/transactions/_actions/updateExpanseAction";
 import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
 import { SubmitButton } from "@/components/SubmitButton";
 import { DatePickerField } from "@/components/ui/datepicker";
@@ -29,19 +31,23 @@ import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 
-export const TransactionForm = () => {
-  const [state, formAction] = useFormState(addExpenseAction, {
-    issues: [],
-  });
+export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
+  const updateExpenseActionWithId = updateExpenseAction.bind(null, expanse?.id);
+  const [state, formAction] = useFormState(
+    expanse ? updateExpenseActionWithId : addExpenseAction,
+    {
+      issues: [],
+    }
+  );
 
   const form = useForm<z.infer<typeof expanseSchema>>({
     resolver: zodResolver(expanseSchema),
     defaultValues: {
-      title: "",
-      amount: 0,
-      category: "",
-      issueDate: "",
-      status: "",
+      title: expanse?.title ?? "",
+      amount: expanse?.amount ?? 0,
+      category: expanse?.category.value ?? "",
+      issueDate: expanse?.issueDate,
+      status: expanse?.status.value ?? "",
       file: "",
     },
   });
@@ -50,8 +56,10 @@ export const TransactionForm = () => {
   if (state?.success) {
     setTimeout(() => {
       toast({
-        title: "Transaction added successfully",
-        description: `${form.getValues("title")} has been added`,
+        title: `Transaction ${expanse ? "updated" : "added"} successfully`,
+        description: `${form.getValues("title")} has been ${
+          expanse ? "updated" : "added"
+        }`,
       });
     });
 
@@ -60,7 +68,7 @@ export const TransactionForm = () => {
 
   if (state?.issues?.length > 0) {
     toast({
-      title: "Failed to add transaction",
+      title: `Failed to ${expanse ? "edit" : "add"} transaction`,
       description: state?.issues?.join(", "),
     });
     state.issues = [];
@@ -70,9 +78,11 @@ export const TransactionForm = () => {
     <div className='flex items-center justify-center py-12'>
       <div className='mx-auto grid w-[350px] gap-6'>
         <div className='grid gap-2 text-center'>
-          <h1 className='text-3xl font-bold'>Add Transaction</h1>
+          <h1 className='text-3xl font-bold'>
+            {expanse ? "Edit" : "Add"} Transaction
+          </h1>
           <p className='text-balance text-muted-foreground'>
-            Add a new transaction to your budget
+            {expanse ? "Edit" : "Add"} a new transaction to your budget
           </p>
         </div>
         <div className='grid gap-4'>
@@ -80,7 +90,7 @@ export const TransactionForm = () => {
             <form
               ref={formRef}
               action={formAction}
-              onSubmit={form.handleSubmit(() => {
+              onSubmit={form.handleSubmit((e) => {
                 if (formRef?.current) {
                   formAction(new FormData(formRef?.current));
                 }
@@ -187,22 +197,28 @@ export const TransactionForm = () => {
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name='file'
-                render={({ field }) => (
-                  <FormItem className='flex flex-col'>
-                    <FormLabel>FV</FormLabel>
-                    <FormControl>
-                      <Input type='file' placeholder='Select file' {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      Upload FV for the transaction.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {!expanse && (
+                <FormField
+                  control={form.control}
+                  name='file'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-col'>
+                      <FormLabel>FV</FormLabel>
+                      <FormControl>
+                        <Input
+                          type='file'
+                          placeholder='Select file'
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        Upload FV for the transaction.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
               <input
                 hidden
                 name='status'

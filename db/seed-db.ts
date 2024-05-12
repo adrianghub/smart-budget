@@ -1,6 +1,6 @@
-import {faker} from "@faker-js/faker";
+import { createClient } from "@/lib/supabase/server";
+import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
-import {createClient} from "../lib/supabase/client";
 
 dotenv.config();
 
@@ -24,13 +24,13 @@ async function seedData() {
       user_id: "b2310f2e-5e84-488b-a3f2-512c499857d7",
       amount: parseFloat(faker.commerce.price()),
       category: faker.commerce.department(),
-      issue_date: faker.date.recent({days: 1}).toISOString().split("T")[0],
+      issue_date: faker.date.recent({ days: 1 }).toISOString().split("T")[0],
       fv_ref_url: faker.internet.url(),
       status: faker.helpers.arrayElement(["PAID", "UNPAID", "PENDING"]),
     });
   }
 
-  const {data, error} = await supabase.from("expenses").insert(records);
+  const { data, error } = await supabase.from("expenses").insert(records);
 
   if (error) {
     console.error("Error seeding data:", error);

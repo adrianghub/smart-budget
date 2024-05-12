@@ -1,17 +1,23 @@
 "use client";
 
-import {format} from "date-fns";
-import {CalendarIcon} from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 
-import {Button} from "@/components/ui/button";
-import {Calendar} from "@/components/ui/calendar";
-import {FormControl} from "@/components/ui/form";
-import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import {cn} from "@/lib/utils/cn";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { FormControl } from "@/components/ui/form";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils/cn";
 
 export function DatePickerField<
-  T extends {value: string; onChange: (value: Date | undefined) => void}
->({field}: {field: T}) {
+  T extends { value: string; onChange: (value: Date | undefined) => void }
+>({ field }: { field: T }) {
+  console.log(field.value);
+
   return (
     <Popover>
       <PopoverTrigger asChild>

@@ -1,6 +1,7 @@
 import { TransactionsTable } from "@/app/(main)/transactions/_components/TransactionsTable";
 import { Button } from "@/components/ui/button";
 import { getExpansesData } from "@/lib/api/handlers";
+import Link from "next/link";
 
 export const TransactionsTableView = async () => {
   const data = await getExpansesData();
@@ -17,7 +18,9 @@ export const TransactionsTableView = async () => {
           <p className='text-sm text-muted-foreground'>
             Start by adding a new transaction
           </p>
-          <Button className='mt-4'>Add Transaction</Button>
+          <Button className='mt-4' asChild>
+            <Link href='/transactions/new'>Add Transaction</Link>
+          </Button>
         </div>
       )}
     </>

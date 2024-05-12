@@ -2,7 +2,7 @@
 
 import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { deleteBulkTransactions } from "@/app/(main)/transactions/_actions/deleteTransactions";
-import { DeleteActionButton } from "@/components/ui/DeleteActionButton";
+import { DeleteBulkActionButton } from "@/components/DeleteBulkActionButton";
 import { toast } from "@/components/ui/use-toast";
 import type { Table } from "@tanstack/react-table";
 import { useFormState } from "react-dom";
@@ -15,11 +15,7 @@ export const TransactionsTableActions = ({
   disabled?: boolean;
 }) => {
   const rows = table.getFilteredSelectedRowModel().rows;
-  const deleteBulkTransactionsWithRows = deleteBulkTransactions.bind(
-    null,
-    rows.map((row) => row.original)
-  );
-  const [state, formAction] = useFormState(deleteBulkTransactionsWithRows, {
+  const [state, formAction] = useFormState(deleteBulkTransactions, {
     issues: [],
   });
 
@@ -44,15 +40,10 @@ export const TransactionsTableActions = ({
   }
 
   return (
-    <form action={formAction} className='flex items-center justify-between'>
-      <DeleteActionButton
-        table={table}
-        disabled={disabled}
-        onClick={(e) => {
-          e.preventDefault();
-          e.currentTarget.form?.requestSubmit();
-        }}
-      />
-    </form>
+    <DeleteBulkActionButton
+      table={table}
+      disabled={disabled}
+      onClick={() => formAction(rows.map((row) => row.original))}
+    />
   );
 };

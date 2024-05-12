@@ -1,8 +1,6 @@
+import { AddTransactionHeaderButton } from "@/app/(main)/transactions/_components/AddTransactionHeaderButton";
 import { TransactionsTableView } from "@/app/(main)/transactions/_components/TransactionsTableView";
-import { Button } from "@/components/ui/button";
 import { displayCurrentMonth } from "@/lib/utils/displayCurrentMonth";
-import { PlusIcon } from "lucide-react";
-import Link from "next/link";
 import { Suspense } from "react";
 
 export default function TransactionsPage() {
@@ -14,12 +12,7 @@ export default function TransactionsPage() {
           <p>{displayCurrentMonth()}</p>
         </div>
         <div>
-          <Button variant='outline' size='icon' className='h-8 w-8' asChild>
-            <Link href='/transactions/new'>
-              <PlusIcon className='h-4 w-4' />
-              <span className='sr-only'>Add Transaction</span>
-            </Link>
-          </Button>
+          <AddTransactionHeaderButton />
         </div>
       </div>
       <div className='flex flex-1 rounded-lg border border-dashed shadow-sm'>
