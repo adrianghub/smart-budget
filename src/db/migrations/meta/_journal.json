@@ -1,0 +1,20 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1715422417985,
+      "tag": "0000_low_white_tiger",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1715447806428,
+      "tag": "0001_shocking_chat",
+      "breakpoints": true
+    }
+  ]
+}

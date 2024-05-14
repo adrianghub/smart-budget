@@ -1,0 +1,27 @@
+{
+  "version": "6",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1715707153762,
+      "tag": "0000_puzzling_centennial",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1715707454129,
+      "tag": "0002_spooky_overlord",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1715707731946,
+      "tag": "0003_small_lester",
+      "breakpoints": true
+    }
+  ]
+}

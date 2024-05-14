@@ -1,4 +1,4 @@
-import {DollarSign, type LucideIcon} from "lucide-react";
+import { DollarSign, type LucideIcon } from "lucide-react";
 
 interface MenuItem {
   id: string;
@@ -15,9 +15,15 @@ export const menuItems: MenuItem[] = [
   // icon: Home,
   // },
   {
-    id: "expenses",
-    name: "Expenses",
-    href: "/expenses",
+    id: "transactions",
+    name: "Transactions",
+    href: "/transactions",
+    icon: DollarSign,
+  },
+  {
+    id: "wallets",
+    name: "Wallets",
+    href: "/wallets",
     icon: DollarSign,
   },
   // {
