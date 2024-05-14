@@ -1,6 +1,6 @@
 {
-  "id": "3ec4a499-af08-4f14-8f50-75e8e09d7eeb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "47087f7c-5054-4fa7-b146-e992d917386f",
+  "prevId": "3ec4a499-af08-4f14-8f50-75e8e09d7eeb",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "integer",
           "primaryKey": true,
           "notNull": true
         },

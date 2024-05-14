@@ -2,6 +2,7 @@ import { AccountSettingsMenu } from "@/app/(main)/_components/AccountSettingsMen
 import GlobalSearch from "@/app/(main)/_components/GlobalSearch";
 import MobileMenu from "@/app/(main)/_components/MobileMenu";
 import { menuItems } from "@/app/(main)/_constants/menu-items";
+import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/server";
 import { Bell, Package2 } from "lucide-react";
@@ -37,14 +38,10 @@ export default async function MainLayout({
           <div className='flex-1'>
             <nav className='grid items-start px-2 text-sm font-medium lg:px-4'>
               {menuItems.map(({ id, href, name, icon: Icon }) => (
-                <Link
-                  key={id}
-                  href={href}
-                  className='flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground'
-                >
+                <NavLink key={id} href={href}>
                   <Icon className='h-4 w-4' />
                   {name}
-                </Link>
+                </NavLink>
               ))}
             </nav>
           </div>

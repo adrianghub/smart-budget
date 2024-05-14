@@ -1,4 +1,3 @@
-import type { ExpanseStatus } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import {
   type Expanse,
   type ExpanseCategory,
@@ -22,6 +21,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import type { ExpanseStatus } from "../../../../__mocks__/expanses/expanse-statuses-mock";
 
 export const statusIcons: Record<ExpanseStatus["value"], LucideIcon> = {
   paid: Check,

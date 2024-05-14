@@ -1,6 +1,6 @@
 {
-  "id": "3ec4a499-af08-4f14-8f50-75e8e09d7eeb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "2c7ab936-c566-4be2-86e6-32f513945cb6",
+  "prevId": "352117f7-1d9a-4543-a036-5296afb6a2ef",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -10,7 +10,7 @@
       "columns": {
         "id": {
           "name": "id",
-          "type": "text",
+          "type": "serial",
           "primaryKey": true,
           "notNull": true
         },
@@ -30,7 +30,15 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
+      "uniqueConstraints": {
+        "wallets_name_unique": {
+          "name": "wallets_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     }
   },
   "enums": {},

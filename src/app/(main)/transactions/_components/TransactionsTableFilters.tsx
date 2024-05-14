@@ -1,12 +1,12 @@
 "use client";
 
-import { expanseStatuses } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DataTableFacetedFilter } from "@/components/ui/table/data-table-faceted-filter";
 import type { Table } from "@tanstack/react-table";
 import { XIcon } from "lucide-react";
+import { expanseStatuses } from "../../../../__mocks__/expanses/expanse-statuses-mock";
 
 export const TransactionsTableFilters = ({
   table,

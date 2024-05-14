@@ -12,9 +12,19 @@ export async function GET(request: NextRequest) {
   // const filterBy = searchParams.get("filterBy")
   //   ? JSON.parse(searchParams.get("filterBy")!)
   //   : {};
-
   const supabase = createClient();
-  const query = supabase.from("expenses").select("*", { count: "exact" });
+
+  const userSession = await supabase.auth.getUser();
+  const userId = userSession.data.user?.id;
+
+  if (!userId) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
+  const query = supabase
+    .from("expenses")
+    .select("*", { count: "exact" })
+    .eq("user_id", userId);
   // .range((page - 1) * pageSize, page * pageSize - 1);
 
   // if (sortField) {

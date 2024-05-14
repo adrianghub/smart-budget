@@ -1,11 +1,9 @@
 {
-  "id": "3ec4a499-af08-4f14-8f50-75e8e09d7eeb",
-  "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
-    "public.wallets": {
-      "name": "wallets",
+    "public.accounts": {
+      "name": "accounts",
       "schema": "",
       "columns": {
         "id": {
@@ -36,8 +34,10 @@
   "enums": {},
   "schemas": {},
   "_meta": {
-    "columns": {},
     "schemas": {},
-    "tables": {}
-  }
+    "tables": {},
+    "columns": {}
+  },
+  "id": "2edd4870-ee16-4847-9465-772be10f598e",
+  "prevId": "00000000-0000-0000-0000-000000000000"
 }

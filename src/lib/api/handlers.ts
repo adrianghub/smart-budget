@@ -1,28 +1,19 @@
-import { expanseStatuses } from "@/app/(main)/_data-layer/expanse/expanse-statuses-mock";
 import type {
   Expanse,
   ExpanseDto,
 } from "@/app/(main)/_data-layer/expanse/expanses";
+import type { Wallet } from "@/app/(main)/_data-layer/wallets/wallets";
 import { apiConfig } from "@/lib/api/config";
+import { expanseStatuses } from "../../__mocks__/expanses/expanse-statuses-mock";
 
+// Expanses API
 export async function getExpansesData(): Promise<Expanse[]> {
-  const { data } = await fetch(`${apiConfig.url}/api/expanses`, {
-    // cache: "no-store",
+  const { data } = await fetcher(`${apiConfig.url}/api/expanses`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error(error);
-      return [];
-    });
+  });
 
   if (!data || !Array.isArray(data)) {
     return [];
@@ -50,23 +41,12 @@ export async function getExpanseData({
 }: {
   id: string;
 }): Promise<Expanse | undefined> {
-  const { data } = await fetch(`${apiConfig.url}/api/expanses/${id}`, {
-    // cache: "no-store",
+  const { data } = await fetcher(`${apiConfig.url}/api/expanses/${id}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Failed to fetch data");
-      }
-      return response.json();
-    })
-    .catch((error) => {
-      console.error(error);
-      return;
-    });
+  });
 
   if (!data || !Array.isArray(data)) {
     return;
@@ -88,3 +68,35 @@ export async function getExpanseData({
     issueDate: data[0].issue_date,
   };
 }
+
+// Wallets API
+export async function getWalletsData(): Promise<Wallet[]> {
+  const { data } = await fetcher(`${apiConfig.url}/api/wallets`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!data || !Array.isArray(data)) {
+    return [];
+  }
+
+  return data;
+}
+
+const fetcher = (url: string, options?: RequestInit) =>
+  fetch(url, options)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch data");
+      }
+      return response.json();
+    })
+    .then((response) => {
+      return { data: response.data };
+    })
+    .catch((error) => {
+      console.error(error);
+      return { data: undefined };
+    });

@@ -16,8 +16,6 @@ import { cn } from "@/lib/utils/cn";
 export function DatePickerField<
   T extends { value: string; onChange: (value: Date | undefined) => void }
 >({ field }: { field: T }) {
-  console.log(field.value);
-
   return (
     <Popover>
       <PopoverTrigger asChild>
