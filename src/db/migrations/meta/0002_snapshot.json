@@ -1,6 +1,6 @@
 {
-  "id": "34c071db-e435-4b91-916e-34603aa16add",
-  "prevId": "2c7ab936-c566-4be2-86e6-32f513945cb6",
+  "id": "1c34f804-5e8d-4ea8-8c9d-39ea41d88d2c",
+  "prevId": "2edd4870-ee16-4847-9465-772be10f598e",
   "version": "6",
   "dialect": "postgresql",
   "tables": {
@@ -101,6 +101,48 @@
         }
       },
       "uniqueConstraints": {}
+    },
+    "public.categories": {
+      "name": "categories",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "plaid_id": {
+          "name": "plaid_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "categories_name_unique": {
+          "name": "categories_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      }
     },
     "public.session": {
       "name": "session",
@@ -241,6 +283,12 @@
           "type": "text",
           "primaryKey": false,
           "notNull": true
+        },
+        "plaid_id": {
+          "name": "plaid_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
         }
       },
       "indexes": {},

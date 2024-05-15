@@ -13,7 +13,7 @@ export default defineConfig({
     table: "migrations",
     schema: "public",
   },
-  out: "./db/migrations",
+  out: "./src/db/migrations",
   verbose: true,
   strict: true,
 });

@@ -1,1 +1,0 @@
-ALTER TABLE "wallets" ALTER COLUMN "id" SET DATA TYPE text;

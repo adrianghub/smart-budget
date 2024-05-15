@@ -15,6 +15,13 @@
       "when": 1715447806428,
       "tag": "0001_shocking_chat",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1715773130647,
+      "tag": "0002_nebulous_korath",
+      "breakpoints": true
     }
   ]
 }

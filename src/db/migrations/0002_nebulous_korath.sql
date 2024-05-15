@@ -13,6 +13,14 @@ CREATE TABLE IF NOT EXISTS "account" (
 	CONSTRAINT "account_provider_providerAccountId_pk" PRIMARY KEY("provider","providerAccountId")
 );
 --> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "categories" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"user_id" text NOT NULL,
+	"plaid_id" text,
+	CONSTRAINT "categories_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "session" (
 	"sessionToken" text PRIMARY KEY NOT NULL,
 	"userId" text NOT NULL,
@@ -34,7 +42,14 @@ CREATE TABLE IF NOT EXISTS "verificationToken" (
 	CONSTRAINT "verificationToken_identifier_token_pk" PRIMARY KEY("identifier","token")
 );
 --> statement-breakpoint
-ALTER TABLE "wallets" ALTER COLUMN "id" SET DATA TYPE text;--> statement-breakpoint
+CREATE TABLE IF NOT EXISTS "wallets" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"user_id" text NOT NULL,
+	"plaid_id" text,
+	CONSTRAINT "wallets_name_unique" UNIQUE("name")
+);
+--> statement-breakpoint
 DO $$ BEGIN
  ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;
 EXCEPTION

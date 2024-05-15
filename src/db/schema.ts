@@ -12,6 +12,16 @@ export const wallets = pgTable("wallets", {
   id: text("id").primaryKey(),
   name: text("name").notNull().unique(),
   userId: text("user_id").notNull(),
+  plaidId: text("plaid_id"),
+});
+
+export const walletInsertSchema = createInsertSchema(wallets);
+
+export const categories = pgTable("categories", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull().unique(),
+  userId: text("user_id").notNull(),
+  plaidId: text("plaid_id"),
 });
 
 // export const transactions = pgTable("transactions", {
@@ -30,7 +40,6 @@ export const wallets = pgTable("wallets", {
 //   name: text("name").notNull(),
 // });
 
-export const walletInsertSchema = createInsertSchema(wallets);
 // export const transactionInsertSchema = createInsertSchema(transactions);
 // export const categoryInsertSchema = createInsertSchema(categories);
 
