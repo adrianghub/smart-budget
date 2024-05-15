@@ -43,6 +43,18 @@ export const categoriesToTransactions = relations(categories, ({ many }) => ({
 export const categoryInsertSchema = createInsertSchema(categories);
 
 /*
+ * Statuses
+ */
+export const statuses = pgTable("statuses", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull().unique(),
+});
+
+export const statusesToTransactions = relations(statuses, ({ many }) => ({
+  transactions: many(transactions),
+}));
+
+/*
  * Transactions
  */
 export const transactions = pgTable("transactions", {
@@ -53,11 +65,13 @@ export const transactions = pgTable("transactions", {
   notes: text("notes"),
   issue_date: timestamp("issue_date", { mode: "date" }).notNull(),
   fv_ref_url: text("fv_ref_url").notNull(),
-  status: text("status").notNull(),
   walletId: text("wallet_id").references(() => wallets.id, {
     onDelete: "cascade",
   }),
   categoryId: text("category_id").references(() => categories.id, {
+    onDelete: "set null",
+  }),
+  statusId: text("status_id").references(() => statuses.id, {
     onDelete: "set null",
   }),
   file: text("file"),
@@ -71,6 +85,10 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
   category: one(categories, {
     fields: [transactions.categoryId],
     references: [categories.id],
+  }),
+  status: one(statuses, {
+    fields: [transactions.statusId],
+    references: [statuses.id],
   }),
 }));
 
