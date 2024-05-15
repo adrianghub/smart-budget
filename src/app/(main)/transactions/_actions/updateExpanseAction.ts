@@ -2,6 +2,7 @@
 
 import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
+import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -14,9 +15,10 @@ export async function updateExpenseAction(
   formData: FormData
 ) {
   const supabase = createClient();
-  const userSession = await supabase.auth.getUser();
+  const userSession = await auth();
+  const userId = userSession?.user?.id;
 
-  if (!userSession || !userSession.data.user) {
+  if (!userId) {
     return {
       issues: ["User not found"],
     };
@@ -37,7 +39,7 @@ export async function updateExpenseAction(
     .from("expenses")
     .update({
       title,
-      user_id: userSession.data.user.id,
+      user_id: userId,
       amount,
       category,
       issue_date: issueDate.split(" GMT")[0],
