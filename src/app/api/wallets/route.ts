@@ -1,12 +1,10 @@
 import { auth } from "@/auth";
-import { createClient } from "@/lib/supabase/server";
 import { count, eq } from "drizzle-orm";
 import { db } from "../../../db/drizzle";
 import { wallets } from "../../../db/schema";
 
 export async function GET() {
   try {
-    const supabase = createClient();
     const userSession = await auth();
     const userId = userSession?.user?.id;
 

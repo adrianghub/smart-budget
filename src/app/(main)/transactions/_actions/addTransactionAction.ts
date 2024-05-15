@@ -1,11 +1,15 @@
 "use server";
 
-import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { getBucketSignedUrl } from "@/app/(main)/transactions/_actions/getBucketSignedUrl";
-import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
 import { auth } from "@/auth";
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db/drizzle";
+import {
+  transactionInsertSchema,
+  transactions,
+  type Transaction,
+} from "@/db/schema";
 import crypto from "crypto";
+import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
 async function computeSHA256(file: File) {
@@ -18,14 +22,13 @@ async function computeSHA256(file: File) {
   return hashHex;
 }
 
-export async function addExpenseAction(
-  prevState: {
+export async function addTransactionAction(
+  _prevState: {
     success?: boolean;
     issues?: string[];
   },
   formData: FormData
 ) {
-  const supabase = createClient();
   const userSession = await auth();
   const userId = userSession?.user?.id;
 
@@ -36,7 +39,11 @@ export async function addExpenseAction(
   }
 
   const data = Object.fromEntries(formData);
-  const parsed = expanseSchema.safeParse(data);
+  const parsed = transactionInsertSchema
+    .omit({
+      id: true,
+    })
+    .safeParse(data);
 
   if (!parsed.success) {
     return {
@@ -44,25 +51,15 @@ export async function addExpenseAction(
     };
   }
 
-  const { title, amount, category, issueDate, status, file } = parsed.data;
+  const { file } = parsed.data;
 
-  const { data: expanse, error } = await supabase
-    .from("expenses")
-    .insert([
-      {
-        title,
-        user_id: userId,
-        amount,
-        category,
-        issue_date: new Date(issueDate).toISOString().split("T")[0],
-        fv_ref_url: null,
-        status: status.toUpperCase(),
-      },
-    ])
-    .select()
-    .returns<Expanse[]>();
-
-  if (error) throw new Error(error.message);
+  const transaction: Transaction[] = await db
+    .insert(transactions)
+    .values({
+      ...parsed.data,
+      id: crypto.randomUUID(),
+    })
+    .returning();
 
   if (file && file.size > 0) {
     try {
@@ -88,14 +85,10 @@ export async function addExpenseAction(
 
       const fvRefUrl = data.url.split("?")[0];
 
-      const { error } = await supabase
-        .from("expenses")
-        .update({
-          fv_ref_url: fvRefUrl,
-        })
-        .eq("id", expanse[0].id);
-
-      if (error) throw new Error(error.message);
+      await db
+        .update(transactions)
+        .set({ fv_ref_url: fvRefUrl })
+        .where(eq(transactions.id, transaction[0].id));
     } catch (error) {
       console.error(error);
     }

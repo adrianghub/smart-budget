@@ -1,12 +1,9 @@
-import { TransactionForm } from "@/app/(main)/transactions/_components/TransactionForm";
-import { getExpanseData } from "@/lib/api/handlers";
-
 export default async function EditExpansePage({
   params: { id },
 }: {
   params: { id: string };
 }) {
-  const expanse = await getExpanseData({ id });
+  // const expanse = await getExpanseData({ id });
 
   return (
     <>
@@ -15,7 +12,7 @@ export default async function EditExpansePage({
       </div>
       <div className='flex flex-1 rounded-lg border border-dashed shadow-sm'>
         <div className='container mx-auto py-10'>
-          <TransactionForm expanse={expanse} />
+          {/* <TransactionForm expanse={expanse} /> */}
         </div>
       </div>
     </>

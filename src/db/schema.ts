@@ -60,6 +60,7 @@ export const transactions = pgTable("transactions", {
   categoryId: text("category_id").references(() => categories.id, {
     onDelete: "set null",
   }),
+  file: text("file"),
 });
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
@@ -75,7 +76,10 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
 
 export const transactionInsertSchema = createInsertSchema(transactions, {
   issue_date: z.coerce.date(),
+  file: z.any().optional(),
 });
+
+export type Transaction = z.infer<typeof transactionInsertSchema>;
 
 /*
  * Users

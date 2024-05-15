@@ -1,9 +1,7 @@
 "use client";
 
-import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
-import { addExpenseAction } from "@/app/(main)/transactions/_actions/addExpanseAction";
+import { addTransactionAction } from "@/app/(main)/transactions/_actions/addTransactionAction";
 import { updateExpenseAction } from "@/app/(main)/transactions/_actions/updateExpanseAction";
-import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
 import { SubmitButton } from "@/components/SubmitButton";
 import { DatePickerField } from "@/components/ui/datepicker";
 import {
@@ -24,30 +22,37 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "@/components/ui/use-toast";
+import { transactionInsertSchema, type Transaction } from "@/db/schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { redirect } from "next/navigation";
 import { useRef } from "react";
 import { useFormState } from "react-dom";
 import { useForm } from "react-hook-form";
-import type { z } from "zod";
 
-export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
-  const updateExpenseActionWithId = updateExpenseAction.bind(null, expanse?.id);
+export const TransactionForm = ({
+  transaction,
+}: {
+  transaction?: Transaction;
+}) => {
+  const updateExpenseActionWithId = updateExpenseAction.bind(
+    null,
+    transaction?.id
+  );
   const [state, formAction] = useFormState(
-    expanse ? updateExpenseActionWithId : addExpenseAction,
+    transaction ? updateExpenseActionWithId : addTransactionAction,
     {
       issues: [],
     }
   );
 
-  const form = useForm<z.infer<typeof expanseSchema>>({
-    resolver: zodResolver(expanseSchema),
+  const form = useForm<Transaction>({
+    resolver: zodResolver(transactionInsertSchema),
     defaultValues: {
-      title: expanse?.title ?? "",
-      amount: expanse?.amount ?? 0,
-      category: expanse?.category.value ?? "",
-      issueDate: expanse?.issueDate,
-      status: expanse?.status.value ?? "",
+      title: transaction?.title ?? "",
+      amount: transaction?.amount ?? 0,
+      categoryId: transaction?.categoryId ?? "",
+      issue_date: transaction?.issue_date,
+      status: transaction?.status ?? "",
       file: "",
     },
   });
@@ -56,9 +61,9 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
   if (state?.success) {
     setTimeout(() => {
       toast({
-        title: `Transaction ${expanse ? "updated" : "added"} successfully`,
+        title: `Transaction ${transaction ? "updated" : "added"} successfully`,
         description: `${form.getValues("title")} has been ${
-          expanse ? "updated" : "added"
+          transaction ? "updated" : "added"
         }`,
       });
     });
@@ -68,7 +73,7 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
 
   if (state?.issues?.length > 0) {
     toast({
-      title: `Failed to ${expanse ? "edit" : "add"} transaction`,
+      title: `Failed to ${transaction ? "edit" : "add"} transaction`,
       description: state?.issues?.join(", "),
     });
     state.issues = [];
@@ -79,10 +84,10 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
       <div className='mx-auto grid w-[350px] gap-6'>
         <div className='grid gap-2 text-center'>
           <h1 className='text-3xl font-bold'>
-            {expanse ? "Edit" : "Add"} Transaction
+            {transaction ? "Edit" : "Add"} Transaction
           </h1>
           <p className='text-balance text-muted-foreground'>
-            {expanse ? "Edit" : "Add"} a new transaction to your budget
+            {transaction ? "Edit" : "Add"} a new transaction to your budget
           </p>
         </div>
         <div className='grid gap-4'>
@@ -134,13 +139,13 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
               />
               <FormField
                 control={form.control}
-                name='category'
+                name='categoryId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Category</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? ""}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -153,7 +158,7 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
                       </SelectContent>
                     </Select>
                     <FormDescription>
-                      Select a category for your expanse.
+                      Select a category for your transaction.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -187,7 +192,7 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
               />
               <FormField
                 control={form.control}
-                name='issueDate'
+                name='issue_date'
                 render={({ field }) => (
                   <FormItem className='flex flex-col'>
                     <FormLabel>Issue Date</FormLabel>
@@ -197,7 +202,7 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
                   </FormItem>
                 )}
               />
-              {!expanse && (
+              {!transaction && (
                 <FormField
                   control={form.control}
                   name='file'
@@ -228,13 +233,13 @@ export const TransactionForm = ({ expanse }: { expanse?: Expanse }) => {
               <input
                 hidden
                 name='category'
-                value={form.getValues().category}
+                value={form.getValues().categoryId!}
                 readOnly
               />
               <input
                 hidden
                 name='issueDate'
-                value={form.getValues().issueDate}
+                value={form.getValues().issue_date.toISOString().split("T")[0]}
                 readOnly
               />
               <SubmitButton text='Submit Transaction' />
