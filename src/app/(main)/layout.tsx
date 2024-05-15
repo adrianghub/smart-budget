@@ -2,9 +2,9 @@ import { AccountSettingsMenu } from "@/app/(main)/_components/AccountSettingsMen
 import GlobalSearch from "@/app/(main)/_components/GlobalSearch";
 import MobileMenu from "@/app/(main)/_components/MobileMenu";
 import { menuItems } from "@/app/(main)/_constants/menu-items";
+import { auth } from "@/auth";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/lib/supabase/server";
 import { Bell, Package2 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -14,10 +14,9 @@ export default async function MainLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = createClient();
+  const session = await auth();
 
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data?.user) {
+  if (!session?.user?.email) {
     redirect("/auth/login");
   }
 
@@ -53,7 +52,7 @@ export default async function MainLayout({
           <div className='w-full flex-1'>
             <GlobalSearch />
           </div>
-          <AccountSettingsMenu userEmail={data.user.email!} />
+          <AccountSettingsMenu userEmail={session.user.email} />
         </header>
 
         <main className='flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6'>

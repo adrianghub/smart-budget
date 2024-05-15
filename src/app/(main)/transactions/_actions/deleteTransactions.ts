@@ -3,6 +3,7 @@
 import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import { deleteObjectFromBucket } from "@/app/(main)/transactions/_actions/deleteObjectFromBucket";
 import { expanseSchema } from "@/app/(main)/transactions/_schemas/expanseSchema";
+import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
 import { revalidatePath } from "next/cache";
 
@@ -14,8 +15,8 @@ export async function deleteBulkTransactions(
   data: Expanse[]
 ) {
   const supabase = createClient();
-  const userSession = await supabase.auth.getUser();
-  const userId = userSession.data.user?.id;
+  const userSession = await auth();
+  const userId = userSession?.user?.id;
 
   if (!userId) {
     return {

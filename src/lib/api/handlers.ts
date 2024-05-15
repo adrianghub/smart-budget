@@ -4,6 +4,7 @@ import type {
 } from "@/app/(main)/_data-layer/expanse/expanses";
 import type { Wallet } from "@/app/(main)/_data-layer/wallets/wallets";
 import { apiConfig } from "@/lib/api/config";
+import { cookies } from "next/headers";
 import { expanseStatuses } from "../../__mocks__/expanses/expanse-statuses-mock";
 
 // Expanses API
@@ -71,6 +72,8 @@ export async function getExpanseData({
 
 // Wallets API
 export async function getWalletsData(): Promise<Wallet[]> {
+  console.log(cookies());
+
   const { data } = await fetcher(`${apiConfig.url}/api/wallets`, {
     method: "GET",
     headers: {
@@ -86,7 +89,13 @@ export async function getWalletsData(): Promise<Wallet[]> {
 }
 
 const fetcher = (url: string, options?: RequestInit) =>
-  fetch(url, options)
+  fetch(url, {
+    ...options,
+    headers: {
+      ...options?.headers,
+      Cookie: cookies().toString(),
+    },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Failed to fetch data");

@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import { createClient } from "@/lib/supabase/server";
 import type { NextRequest } from "next/server";
 
@@ -13,13 +14,14 @@ export async function GET(request: NextRequest) {
   //   ? JSON.parse(searchParams.get("filterBy")!)
   //   : {};
   const supabase = createClient();
+  const userSession = await auth();
+  const userId = userSession?.user?.id;
 
-  const userSession = await supabase.auth.getUser();
-  const userId = userSession.data.user?.id;
+  // console.log(userSession);
 
-  if (!userId) {
-    return new Response("Unauthorized", { status: 401 });
-  }
+  // if (!userId) {
+  //   return new Response("Unauthorized", { status: 401 });
+  // }
 
   const query = supabase
     .from("expenses")
