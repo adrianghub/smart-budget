@@ -22,6 +22,13 @@
       "when": 1715773130647,
       "tag": "0002_nebulous_korath",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1715779842151,
+      "tag": "0003_pink_silk_fever",
+      "breakpoints": true
     }
   ]
 }

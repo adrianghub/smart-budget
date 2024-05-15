@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   integer,
   pgTable,
@@ -7,7 +8,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import type { AdapterAccountType } from "next-auth/adapters";
+import { z } from "zod";
 
+/*
+ * Wallets
+ */
 export const wallets = pgTable("wallets", {
   id: text("id").primaryKey(),
   name: text("name").notNull().unique(),
@@ -15,8 +20,15 @@ export const wallets = pgTable("wallets", {
   plaidId: text("plaid_id"),
 });
 
+export const walletsToTransactions = relations(wallets, ({ many }) => ({
+  transactions: many(transactions),
+}));
+
 export const walletInsertSchema = createInsertSchema(wallets);
 
+/*
+ * Categories
+ */
 export const categories = pgTable("categories", {
   id: text("id").primaryKey(),
   name: text("name").notNull().unique(),
@@ -24,26 +36,50 @@ export const categories = pgTable("categories", {
   plaidId: text("plaid_id"),
 });
 
-// export const transactions = pgTable("transactions", {
-//   id: text("id").primaryKey(),
-//   userId: text("user_id").notNull(),
-//   categoryId: text("category_id").notNull(),
-//   title: text("title").notNull(),
-//   amount: text("amount").notNull(),
-//   issue_date: text("issue_date").notNull(),
-//   fv_ref_url: text("fv_ref_url").notNull(),
-//   status: text("status").notNull(),
-// });
+export const categoriesToTransactions = relations(categories, ({ many }) => ({
+  transactions: many(transactions),
+}));
 
-// export const categories = pgTable("categories", {
-//   id: text("id").primaryKey(),
-//   name: text("name").notNull(),
-// });
+export const categoryInsertSchema = createInsertSchema(categories);
 
-// export const transactionInsertSchema = createInsertSchema(transactions);
-// export const categoryInsertSchema = createInsertSchema(categories);
+/*
+ * Transactions
+ */
+export const transactions = pgTable("transactions", {
+  id: text("id").primaryKey(),
+  title: text("title").notNull(),
+  amount: integer("amount").notNull(),
+  payee: text("payee").notNull(),
+  notes: text("notes"),
+  issue_date: timestamp("issue_date", { mode: "date" }).notNull(),
+  fv_ref_url: text("fv_ref_url").notNull(),
+  status: text("status").notNull(),
+  walletId: text("wallet_id").references(() => wallets.id, {
+    onDelete: "cascade",
+  }),
+  categoryId: text("category_id").references(() => categories.id, {
+    onDelete: "set null",
+  }),
+});
 
-// Auth
+export const transactionsRelations = relations(transactions, ({ one }) => ({
+  account: one(wallets, {
+    fields: [transactions.walletId],
+    references: [wallets.id],
+  }),
+  category: one(categories, {
+    fields: [transactions.categoryId],
+    references: [categories.id],
+  }),
+}));
+
+export const transactionInsertSchema = createInsertSchema(transactions, {
+  issue_date: z.coerce.date(),
+});
+
+/*
+ * Users
+ */
 export const users = pgTable("user", {
   id: text("id")
     .primaryKey()
@@ -54,6 +90,9 @@ export const users = pgTable("user", {
   image: text("image"),
 });
 
+/*
+ * Accounts
+ */
 export const accounts = pgTable(
   "account",
   {
@@ -78,6 +117,9 @@ export const accounts = pgTable(
   })
 );
 
+/*
+ * Sessions
+ */
 export const sessions = pgTable("session", {
   sessionToken: text("sessionToken").primaryKey(),
   userId: text("userId")
@@ -86,6 +128,9 @@ export const sessions = pgTable("session", {
   expires: timestamp("expires", { mode: "date" }).notNull(),
 });
 
+/*
+ * Verification tokens
+ */
 export const verificationTokens = pgTable(
   "verificationToken",
   {
