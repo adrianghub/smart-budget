@@ -2,19 +2,15 @@
 
 import { auth } from "@/auth";
 import { db } from "@/db/drizzle";
-import {
-  transactionInsertSchema,
-  transactions,
-  type Transaction,
-} from "@/db/schema";
+import { transactionInsertSchema, transactions, wallets } from "@/db/schema";
 import { getBucketSignedUrl } from "@/lib/s3/getBucketSignedUrl";
 import { computeSHA256 } from "@/lib/utils/computeSH256";
-import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
-export async function addTransactionAction(
-  _prevState: {
+export async function updateTransactionAction(
+  id: string,
+  prevState: {
     success?: boolean;
     issues?: string[];
   },
@@ -30,11 +26,7 @@ export async function addTransactionAction(
   }
 
   const data = Object.fromEntries(formData);
-  const parsed = transactionInsertSchema
-    .omit({
-      id: true,
-    })
-    .safeParse(data);
+  const parsed = transactionInsertSchema.safeParse(data);
 
   if (!parsed.success) {
     return {
@@ -42,17 +34,24 @@ export async function addTransactionAction(
     };
   }
 
-  const { file } = parsed.data;
+  const transactionToUpdate = db.$with("transactions_to_update").as(
+    db
+      .select({ id: transactions.id })
+      .from(transactions)
+      .innerJoin(wallets, eq(transactions.walletId, wallets.id))
+      .where(and(eq(transactions.id, id), eq(wallets.userId, userId)))
+  );
 
-  const transaction: Transaction[] = await db
-    .insert(transactions)
-    .values({
-      ...parsed.data,
-      id: crypto.randomUUID(),
-    })
+  const updatedTransaction = await db
+    .with(transactionToUpdate)
+    .update(transactions)
+    .set(parsed.data)
+    .where(eq(transactions.id, id))
     .returning();
 
-  if (file && file.size > 0) {
+  const { file, fv_ref_url } = parsed.data;
+
+  if (file && file.size > 0 && !fv_ref_url) {
     try {
       const checksum = await computeSHA256(file);
       const signedUrlResult = await getBucketSignedUrl(
@@ -79,7 +78,7 @@ export async function addTransactionAction(
       await db
         .update(transactions)
         .set({ fv_ref_url: fvRefUrl })
-        .where(eq(transactions.id, transaction[0].id));
+        .where(eq(transactions.id, updatedTransaction[0].id));
     } catch (error) {
       console.error(error);
     }

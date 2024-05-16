@@ -1,15 +1,15 @@
-import type {
-  Expanse,
-  ExpanseDto,
-} from "@/app/(main)/_data-layer/expanse/expanses";
+import type { Expanse } from "@/app/(main)/_data-layer/expanse/expanses";
 import type { Wallet } from "@/app/(main)/_data-layer/wallets/wallets";
+import type { Transaction } from "@/db/schema";
 import { apiConfig } from "@/lib/api/config";
 import { cookies } from "next/headers";
 import { expanseStatuses } from "../../__mocks__/expanses/expanse-statuses-mock";
 
-// Expanses API
-export async function getExpansesData(): Promise<Expanse[]> {
-  const { data } = await fetcher(`${apiConfig.url}/api/expanses`, {
+/*
+ * Expanses API
+ */
+export async function getTransactionsData(): Promise<Transaction[]> {
+  const { data } = await fetcher(`${apiConfig.url}/api/transactions`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -20,21 +20,7 @@ export async function getExpansesData(): Promise<Expanse[]> {
     return [];
   }
 
-  return data.map((exp: ExpanseDto) => ({
-    ...exp,
-    status: expanseStatuses
-      .map((status) => ({
-        label: status.label,
-        value: status.value.toLowerCase(),
-      }))
-      .find((status) => status.value === exp.status.toLowerCase())!,
-    category: {
-      value: exp.category,
-      label: exp.category.split("")[0].toUpperCase() + exp.category.slice(1),
-    },
-    issueDate: new Date(exp.issue_date).toLocaleDateString("pl-PL"),
-    fvRefUrl: exp.fv_ref_url,
-  }));
+  return data;
 }
 
 export async function getExpanseData({
