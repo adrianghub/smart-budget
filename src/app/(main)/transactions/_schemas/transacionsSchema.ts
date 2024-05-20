@@ -1,7 +1,6 @@
 import { z } from "zod";
 
-// TODO: use transactionInsertSchema
-export const expanseSchema = z.object({
+export const transactionsSchema = z.object({
   title: z
     .string()
     .trim()

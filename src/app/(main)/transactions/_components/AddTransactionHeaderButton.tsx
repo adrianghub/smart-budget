@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { getExpansesData } from "@/lib/api/handlers";
+import { getTransactionsData } from "@/lib/api/handlers";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 
 export const AddTransactionHeaderButton = async () => {
-  const data = await getExpansesData();
+  const data = await getTransactionsData();
 
   if (data.length === 0) {
     return null;

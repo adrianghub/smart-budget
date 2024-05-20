@@ -1,43 +1,85 @@
-import { createClient } from "@/lib/supabase/server";
+import { db } from "@/db/drizzle";
+import { categories, statuses, transactions, wallets } from "@/db/schema";
 import { faker } from "@faker-js/faker";
 import * as dotenv from "dotenv";
 
 dotenv.config();
 
-const supabase = createClient();
-
 async function seedData() {
-  const deleteResponse = await supabase.from("expenses").delete().select("*");
-
-  if (deleteResponse.error) {
-    console.error("Error deleting previous data:", deleteResponse.error);
+  // Delete previous data
+  try {
+    await db.delete(transactions);
+    await db.delete(wallets);
+    await db.delete(categories);
+    await db.delete(statuses);
+    console.log("Previous data deleted successfully.");
+  } catch (error) {
+    console.error("Error deleting previous data:", error);
     return;
   }
 
-  console.log("Previous data deleted successfully.");
+  // Seed statuses
+  const statusRecords = [
+    { id: faker.datatype.uuid(), name: "Pending" },
+    { id: faker.datatype.uuid(), name: "Completed" },
+    { id: faker.datatype.uuid(), name: "Failed" },
+  ];
 
-  const records = [];
-
-  for (let i = 0; i < 20; i++) {
-    records.push({
-      title: faker.commerce.productName(),
-      user_id: "b2310f2e-5e84-488b-a3f2-512c499857d7",
-      amount: parseFloat(faker.commerce.price()),
-      category: faker.commerce.department(),
-      issue_date: faker.date.recent({ days: 1 }).toISOString().split("T")[0],
-      fv_ref_url: faker.internet.url(),
-      status: faker.helpers.arrayElement(["PAID", "UNPAID", "PENDING"]),
-    });
-  }
-
-  const { data, error } = await supabase.from("expenses").insert(records);
-
-  if (error) {
-    console.error("Error seeding data:", error);
+  try {
+    await db.insert(statuses).values(statusRecords);
+  } catch (error) {
+    console.error("Error seeding statuses:", error);
     return;
   }
 
-  console.log("Data seeded successfully:", data);
+  // Seed wallets
+  const walletRecords = Array.from({ length: 5 }, () => ({
+    id: faker.string.uuid(),
+    name: faker.finance.accountName(),
+    userId: faker.string.uuid(),
+    plaidId: faker.string.uuid(),
+  }));
+  try {
+    await db.insert(wallets).values(walletRecords);
+  } catch (error) {
+    console.error("Error seeding wallets:", error);
+    return;
+  }
+
+  // Seed categories
+  const categoryRecords = Array.from({ length: 5 }, () => ({
+    id: faker.string.uuid(),
+    name: faker.commerce.department(),
+    userId: faker.string.uuid(),
+    plaidId: faker.string.uuid(),
+  }));
+  try {
+    await db.insert(categories).values(categoryRecords);
+  } catch (error) {
+    console.error("Error seeding categories:", error);
+    return;
+  }
+
+  // Seed transactions
+  const transactionRecords = Array.from({ length: 20 }, () => ({
+    id: faker.string.uuid(),
+    title: faker.commerce.productName(),
+    amount: faker.number.int({ min: 10, max: 1000 }),
+    payee: faker.company.name(),
+    notes: faker.lorem.sentence(),
+    issue_date: faker.date.past(),
+    fv_ref_url: faker.internet.url(),
+    walletId: faker.helpers.arrayElement(walletRecords).id,
+    categoryId: faker.helpers.arrayElement(categoryRecords).id,
+    statusId: faker.helpers.arrayElement(statusRecords).id,
+    file: faker.system.filePath(),
+  }));
+  try {
+    await db.insert(transactions).values(transactionRecords);
+  } catch (error) {
+    console.error("Error seeding transactions:", error);
+    return;
+  }
+
+  console.log("Data seeded successfully.");
 }
-
-seedData();

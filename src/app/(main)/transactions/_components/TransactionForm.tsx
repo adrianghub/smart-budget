@@ -1,7 +1,7 @@
 "use client";
 
 import { addTransactionAction } from "@/app/(main)/transactions/_actions/addTransactionAction";
-import { updateExpenseAction } from "@/app/(main)/transactions/_actions/updateExpanseAction";
+import { updateTransactionAction } from "@/app/(main)/transactions/_actions/updateTransactionAction";
 import { SubmitButton } from "@/components/SubmitButton";
 import { DatePickerField } from "@/components/ui/datepicker";
 import {
@@ -34,12 +34,10 @@ export const TransactionForm = ({
 }: {
   transaction?: Transaction;
 }) => {
-  const updateExpenseActionWithId = updateExpenseAction.bind(
-    null,
-    transaction?.id
-  );
   const [state, formAction] = useFormState(
-    transaction ? updateExpenseActionWithId : addTransactionAction,
+    transaction
+      ? updateTransactionAction.bind(null, transaction.id)
+      : addTransactionAction,
     {
       issues: [],
     }
@@ -52,7 +50,7 @@ export const TransactionForm = ({
       amount: transaction?.amount ?? 0,
       categoryId: transaction?.categoryId ?? "",
       issue_date: transaction?.issue_date,
-      status: transaction?.status ?? "",
+      statusId: transaction?.statusId ?? "",
       file: "",
     },
   });
@@ -166,13 +164,13 @@ export const TransactionForm = ({
               />
               <FormField
                 control={form.control}
-                name='status'
+                name='statusId'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}
+                      defaultValue={field.value ?? ""}
                     >
                       <FormControl>
                         <SelectTrigger>
@@ -227,7 +225,7 @@ export const TransactionForm = ({
               <input
                 hidden
                 name='status'
-                value={form.getValues().status}
+                value={form.getValues().statusId!}
                 readOnly
               />
               <input
